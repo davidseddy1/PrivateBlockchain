@@ -1,6 +1,5 @@
 # **Additional Notes**
 - Steps to Run Code:
-  - npm install
   - node app.js 
 
 # Private Blockchain Application
