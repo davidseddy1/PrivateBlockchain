@@ -5,6 +5,7 @@
 
 # Private Blockchain Application
 - ##### *code from udacity and David* 
+- ##### modified to fit new naming convention
 
 You are starting your journey as a Blockchain Developer, this project allows you to demonstrate
 that you are familiarized with the fundamentals concepts of a Blockchain platform.
@@ -23,34 +24,23 @@ you will implement in your private blockchain.
 
 ## What problem will you solve implementing this private Blockchain application?
 
-Your employer is trying to make a test of concept on how a Blockchain application can be implemented in his company.
-He is an astronomy fans and he spend most of his free time on searching stars in the sky, that's why he would like
-to create a test application that will allows him to register stars, and also some others of his friends can register stars
-too but making sure the application know who owned each star.
+The information inputted in the block chain will be secured. As well as when someone tries to access the block chain, it can be ensured that the information hasn't been tampered with. Also when submitting the information, it verifies that the right people involved are the ones submitting to the block chain. Security is increased with this implementation. 
 
 ### What is the process describe by the employer to be implemented in the application?
 
 1. The application will create a Genesis Block when we run the application.
-2. The user will request the application to send a message to be signed using a Wallet and in this way verify the ownership over the wallet address. The message format will be: `<WALLET_ADRESS>:${new Date().getTime().toString().slice(0,-3)}:starRegistry`;
+2. The user will request the application to send a message to be signed using a Wallet and in this way verify the ownership over the wallet address. The message format will be: `<WALLET_ADRESS>:${new Date().getTime().toString().slice(0,-3)}:RUIsRegistry`;
 3. Once the user have the message the user can use a Wallet to sign the message.
-4. The user will try to submit the Star object for that it will submit: `wallet address`, `message`, `signature` and the `star` object with the star information.
-    The Start information will be formed in this format:
-    ```json
-        "star": {
-            "dec": "68° 52' 56.9",
-            "ra": "16h 29m 1.0s",
-            "story": "Testing the story 4"
-		}
-    ```
-5. The application will verify if the time elapsed from the request ownership (the time is contained in the message) and the time when you submit the star is less than 5 minutes.
-6. If everything is okay the star information will be stored in the block and added to the `chain`
-7. The application will allow us to retrieve the Star objects belong to an owner (wallet address). 
+4. The user will try to submit the score the survey for that it will submit: `employer_pk`, `message`, `signature`, `employee_pk` and the `rui` object with the rui information.
+5. The application will verify if the time elapsed from the request ownership (the time is contained in the message) and the time when you submit the scores is less than 5 minutes.
+6. If everything is okay the score information will be stored in the block and added to the `chain`
+7. The application will allow us to retrieve the Score objects belong to an owner (wallet address). 
 
 
 ## What tools or technologies you will use to create this application?
 
 - This application will be created using Node.js and Javascript programming language. The architecture will use ES6 classes
-because it will help us to organize the code and facilitate the maintnance of the code.
+because it will help us to organize the code and facilitate the maintenance of the code.
 - The company suggest to use Visual Studio Code as an IDE to write your code because it will help you debug the code easily
 but you can choose the code editor you feel confortable with.
 - Some of the libraries or npm modules you will use are:
@@ -133,33 +123,34 @@ You can check in your terminal the the Express application is listening in the P
      * that this method is a private method. 
      */
 4. `blockchain.js` file. In the `Blockchain` class we are going to implement the method:
-    `requestMessageOwnershipVerification(address)`
+    `requestMessageOwnershipVerification(employee_pk)`
     /**
-     * The requestMessageOwnershipVerification(address) method
+     * The requestMessageOwnershipVerification(employer_pk) method
      * will allow you  to request a message that you will use to
      * sign it with your Bitcoin Wallet (Electrum or Bitcoin Core)
      * This is the first step before submit your Block.
      * The method return a Promise that will resolve with the message to be signed
-     * @param {*} address 
+     * @param {*} employer_pk
      */
 5. `blockchain.js` file. In the `Blockchain` class we are going to implement the method:
-    `submitStar(address, message, signature, star)`
+    `submitScore(employer_pk, message, signature, employee_pk, rui)`
     /**
-     * The submitStar(address, message, signature, star) method
-     * will allow users to register a new Block with the star object
+     * The submitScore(employer_pk, message, signature, employee_pk, rui) method
+     * will allow users to register a new Block with the `rui` and  `employer_pk` object
      * into the chain. This method will resolve with the Block added or
      * reject with an error.
      * Algorithm steps:
      * 1. Get the time from the message sent as a parameter example: `parseInt(message.split(':')[1])`
      * 2. Get the current time: `let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));`
      * 3. Check if the time elapsed is less than 5 minutes
-     * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
+     * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(employer_pk, message, signature)`
      * 5. Create the block and add it to the chain
      * 6. Resolve with the block added.
-     * @param {*} address 
+     * @param {*} employer_pk 
      * @param {*} message 
      * @param {*} signature 
-     * @param {*} star 
+     * @param {*} employee_pk
+     * @param {*} rui
      */
 6. `blockchain.js` file. In the `Blockchain` class we are going to implement the method:
     `getBlockByHash(hash)`
@@ -170,9 +161,9 @@ You can check in your terminal the the Express application is listening in the P
      * @param {*} hash 
      */
 7. `blockchain.js` file. In the `Blockchain` class we are going to implement the method:
-    `getStarsByWalletAddress (address)`
+    `getScore (employee_pk)`
     /**
-     * This method will return a Promise that will resolve with an array of Stars objects existing in the chain 
+     * This method will return a Promise that will resolve with an array of Scores objects existing in the chain 
      * and are belongs to the owner with the wallet address passed as parameter.
      * 
      * @param {*} address 
@@ -196,12 +187,17 @@ You should see in your terminal a message indicating that the server is listenin
 > Server Listening for port: 8000
 
 2. To make sure your application is working fine and it creates the Genesis Block you can use POSTMAN to request the Genesis block:
+    - **picture for the s3amazon.aws.com is for the previous convention.** 
     ![Request: http://localhost:8000/block/0 ](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca360cc_request-genesis/request-genesis.png)
-3. Make your first request of ownership sending your wallet address:
+3. Make your first request of ownership sending your wallet address: 
+    - **picture for the s3amazon.aws.com is for the previous convention.** 
     ![Request: http://localhost:8000/requestValidation ](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca36182_request-ownership/request-ownership.png)
-4. Sign the message with your Wallet:
+4. Sign the message with your Wallet: 
+    - **picture for the s3amazon.aws.com is for the previous convention.** 
     ![Use the Wallet to sign a message](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca36182_request-ownership/request-ownership.png)
-5. Submit your Star
-     ![Request: http://localhost:8000/submitstar](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca365d3_signing-message/signing-message.png)
-6. Retrieve Stars owned by me
+5. Submit your Score
+    -  **picture for the s3.amazon.aws.com is for the previous naming converntion**  
+     ![Request: http://localhost:8000/submit](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca365d3_signing-message/signing-message.png)
+6. Retrieve Scores owned by employee 
+    - **picture for the s3amazon.aws.com is for the previous convention.** 
     ![Request: http://localhost:8000/blocks/<WALLET_ADDRESS>](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca362b9_retrieve-stars/retrieve-stars.png)
