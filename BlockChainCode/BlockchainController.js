@@ -18,7 +18,6 @@ class BlockchainController {
         this.getBlockByHash();
         this.getEmployee();
         this.getValidateChain();
-        this.Verification();
     }
 
     // Enpoint to Get a Block by Height (GET Endpoint)
@@ -55,30 +54,6 @@ class BlockchainController {
             }
         });
     }
-
-    // Endpoint that allows user to request the verificaiton of a signature given (GET Endpoint)
-    Verification() { // validates a message by inputting an address, message and signature
-            this.app.get("/check", async (req, res) => {
-            if(req.body.employer_pk && req.body.message && req.body.signature) {
-                        const employer_pk = req.body.employer_pk;
-                        const signature = req.body.signature;
-                        const message = req.body.message;
-                        try{
-                            let verify = await this.blockchain.verifysignature(employer_pk, message, signature);
-                            if(verify) {
-                                return res.status(200).send("good");
-                            }else {
-                                res.status(500).send("an error happened");
-                            }
-                        }catch (error) {
-                            return res.status(500).send(error);
-                        }
-            }else {
-                return res.status(500).send("Check the Body Parameter!");
-            }
-        });
-    }   
-
 
     // Endpoint that allow Submit a Star, yu need first to `requestOwnership` to have the message (POST endpoint)
     submit() { // may need to eventually change this to fit project more
