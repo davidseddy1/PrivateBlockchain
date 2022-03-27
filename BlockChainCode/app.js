@@ -9,10 +9,22 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cors = require('cors');
+
 /**
  * Require the Blockchain class. This allow us to have only one instance of the class.
  */
 const BlockChain = require('./src/blockchain.js');
+
+/*
+* Setting the options to only one site to access this
+*/ 
+
+
+const corsOption = {
+	origin:'http://localhost:3000',
+	optionsSuccessStatus: 200
+} 
 
 class ApplicationServer {
 
@@ -39,6 +51,7 @@ class ApplicationServer {
 		this.app.use(morgan("dev"));
 		this.app.use(bodyParser.urlencoded({extended:true}));
 		this.app.use(bodyParser.json());
+		this.app.use(cors(corsOption)); // implementing the single route cor policy
 	}
 
 	initControllers() {
