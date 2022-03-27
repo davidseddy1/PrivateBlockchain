@@ -106,21 +106,21 @@ class Blockchain {
      * sign it with your Bitcoin Wallet (Electrum or Bitcoin Core)
      * This is the first step before submit your Block.
      * The method return a Promise that will resolve with the message to be signed
-     * @param {*} address 
+     * @param {*} employer_pk 
      * 
      *  You will need to replace <WALLET_ADDRESS> with the wallet address 
     submitted by the requestor and the time in your message will allow you to validate the 5 minutes time window.
 
      */
-    requestMessageOwnershipVerification(address) {
+    requestMessageOwnershipVerification(employer_pk) {
         return new Promise((resolve) => {
-            resolve( address + ":" + new Date().getTime().toString().slice(0,-3) + ":starRegistry");
+            resolve( employer_pk + ":" + new Date().getTime().toString().slice(0,-3) + ":RUIsRegistry");
         });
     }
 
     /**
-     * The submitStar(address, message, signature, star) method
-     * will allow users to register a new Block with the star object
+     * The submitScore(employer_pk, message, signature, employee_pk, rui) method
+     * will allow users to register a new Block with the score and employee_pk object
      * into the chain. This method will resolve with the Block added or
      * reject with an error.
      * Algorithm steps:
@@ -130,12 +130,13 @@ class Blockchain {
      * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
      * 5. Create the block and add it to the chain
      * 6. Resolve with the block added.
-     * @param {*} address 
+     * @param {*} employer_pk 
      * @param {*} message 
      * @param {*} signature 
-     * @param {*} star 
+     * @param {*} employee_pk
+     * @param {*} rui
      */
-    submitStar(address, message, signature, star) {
+    submitScore(employer_pk, message, signature, employee_pk, rui) {
         let self = this;
         return new Promise(async (resolve, reject) => {
 
@@ -146,10 +147,10 @@ class Blockchain {
                 reject(Error("Time Expired"));
             };
 
-            if(!bitcoinMessage.verify(message, address, signature)){
+            if(!bitcoinMessage.verify(message, employer_pk, signature)){
                 reject(Error("Invalid Signature"));
             }
-            let contents = {"address":address,"message":message,"signature":signature,"star":star};
+            let contents = {"employer_pk":employer_pk,"message":message,"signature":signature,"employee_pk":employee_pk, "rui":rui};
             let block = new BlockClass.Block(contents);
             try{
                 await self._addBlock(block);
@@ -196,24 +197,24 @@ class Blockchain {
     }
 
     /**
-     * This method will return a Promise that will resolve with an array of Stars objects existing in the chain 
+     * This method will return a Promise that will resolve with an array of Scores objects existing in the chain 
      * and are belongs to the owner with the wallet address passed as parameter.
-     * Remember the star should be returned decoded.
+     * Remember the score should be returned decoded.
      * @param {*} address 
      */
-    getStarsByWalletAddress (address) {
+    getScore (employee_pk) {
         let self = this;
-        let stars = [];
+        let scores = [];
         return new Promise((resolve, reject) => {
             self.chain.forEach(elementBlock => {
                 let data = elementBlock.getBData();
                 if(data!="Genesys block!"){
-                    if (data.address == address){
-                        stars.push(data.star);
+                    if (data.employee_pk == employee_pk){
+                        scores.push(data.rui);
                     }
                 }
             });
-            resolve(stars);
+            resolve(scores);
         });
     }
 
