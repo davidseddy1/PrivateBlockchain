@@ -1,6 +1,13 @@
 # **Additional Notes**
 - Steps to Run Code:
-  - node app.js 
+  - `npm install`
+    - Allows packages in pakage.json to be imported to the project  
+  - `node app.js`
+
+- Docker Components
+  - Dockerfile allows file to become a docker container
+  - .dockerignore : allows docker to ignore certain files
+  - To run code refer to Previous [README.md](../README.md)
 
 # Private Blockchain Application
 - ##### *code from udacity and David* 
